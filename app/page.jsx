@@ -37,10 +37,15 @@ export default function Chat() {
   // };
 
   return (
-    <section className="max-w-lg ml-24 mt-24">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+    <section className="max-w-lg items-center justify-center mt-14">
+      <h1 className="text-5xl font-bold max-w-xl text-center p-3 text-slate-200">
+        Get AI generated feedback and grades for student writing
+      </h1>
+      
       <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <label htmlFor="studentWriting">Student Writing</label>
+          <label htmlFor="studentWriting" className="text-slate-200">Student Writing</label>
           <textarea
             id="studentWriting"
             value={input}
@@ -49,7 +54,7 @@ export default function Chat() {
           />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="learningOutcomes">Expected Learning Outcomes</label>
+          <label htmlFor="learningOutcomes" className="text-slate-200">Expected Learning Outcomes</label>
           <textarea
             id="learningOutcomes"
             value={learningOutcomes}
@@ -58,7 +63,7 @@ export default function Chat() {
           />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="markingCriteria">Marking Criteria</label>
+          <label htmlFor="markingCriteria" className="text-slate-200">Marking Criteria</label>
           <textarea
             id="markingCriteria"
             value={markingCriteria}
@@ -69,13 +74,15 @@ export default function Chat() {
         <button id="giveFeedback" onClick={handleButton(setPrompt, 'feedback')}>{(isLoading && onclick) ? "Loading..." : "Give feedback"}</button>
         <button id="generateGrade" onClick={handleButton(setPrompt, 'grade')}>{isLoading && onclick ? "Loading..." : "Generate grade"}</button>
       </form>
+      
       {responseFromServer && (
-        <div className="mt-6">
+        <div className="mt-6 text-slate-200">
           {responseFromServer}
         </div>
       )
       }
     </section>
+  </div>
   );
 }
 
