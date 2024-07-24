@@ -12,18 +12,19 @@ export const runtime = 'edge'
 
 export async function POST(req: Request): Promise<Response> {
   try {
-    const {prompt: studentWriting, learningOutcomes, markingCriteria } = await req.json()
-    console.log(studentWriting, learningOutcomes, markingCriteria);
+    const {prompt: studentWriting, learningOutcomes, markingCriteria, promptType } = await req.json()
+    const generatePrompt = promptType === 'feedback' ? 'Please provide detailed feedback only on the following student writing based on the expected learning outcomes and marking criteria.' : 'grade the student writing. Based on the expected learning outcomes and marking criteria, please provide a mark out of 100 for the following student writing.'
+    console.log(studentWriting, learningOutcomes, markingCriteria, promptType);
 
     const result = await streamText({
       model: openai('gpt-3.5-turbo'),
       system:
-        'You are an expert resume writer with over 20 years of experience working with job seekers.',
+        'You are an experienced high school teacher.',
       messages: [
         {
           role: 'user',
           content: `You are a high school teacher which is responsible for teaching Geography.
-          You need to give feedback to student writing.
+          You need to: ${generatePrompt}.
           Here is the student writing: ${studentWriting}.
           Here is the expected learning outcomes: ${learningOutcomes}.
           Here is the marking criteria: ${markingCriteria}

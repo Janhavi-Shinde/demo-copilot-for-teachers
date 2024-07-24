@@ -4,19 +4,26 @@
 
 import { useCompletion } from "ai/react";
 import { useState } from "react";
+import { set } from "zod";
 
 export default function Chat() {
   const [studentWriting, setStudentWriting] = useState("");
   const [learningOutcomes, setLearningOutcomes] = useState("");
   const [markingCriteria, setMarkingCriteria] = useState("");
+  const [promptType, setPrompt] = useState("");
 
   const { completion: responseFromServer, input, handleInputChange, handleSubmit, isLoading } = useCompletion({
     api: "/api/feedback",
     body: {
       learningOutcomes,
-      markingCriteria
+      markingCriteria,
+      promptType,
     }
   });
+
+  const handleButton = (setPrompt, promptType) => async (e) => {
+    setPrompt(promptType);
+  };
 
   const handleChange = (setter) => (e) => {
     setter(e.target.value);
@@ -59,7 +66,8 @@ export default function Chat() {
             disabled={isLoading}
           />
         </div>
-        <button>{isLoading ? "Loading..." : "Submit"}</button>
+        <button id="giveFeedback" onClick={handleButton(setPrompt, 'feedback')}>{(isLoading && onclick) ? "Loading..." : "Give feedback"}</button>
+        <button id="generateGrade" onClick={handleButton(setPrompt, 'grade')}>{isLoading && onclick ? "Loading..." : "Generate grade"}</button>
       </form>
       {responseFromServer && (
         <div className="mt-6">
