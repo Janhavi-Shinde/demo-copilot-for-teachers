@@ -1,0 +1,107 @@
+/* General text styles for paragraphs, lists, and headings */
+p,
+ul,
+li {
+  color: white;
+  padding: 10px;
+  font-weight: 200;
+}
+
+h2,
+h3 {
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+}
+
+h3 {
+  font-weight: 500;
+}
+
+/* Assignment view container */
+.assignmentView {
+  display: flex;
+  flex-direction: column;
+  padding: 100px;
+}
+
+/* Prompt screen container layout */
+.prompt-screen-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Section within the prompt screen, centers its content */
+.prompt-screen-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form layout */
+.prompt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Textarea container, although currently not used, it's kept for future multiple textareas */
+.textarea-container {
+  display: flex;
+  gap: 16px;
+}
+
+/* Wrapper around textarea to set width and layout */
+.textarea-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+}
+
+/* Label styling */
+.label {
+  color: #cbd5e1;
+}
+
+/* Textarea styling */
+.textarea {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  width: 100%; /* Ensure textarea takes full width of its container */
+}
+
+/* Button container layout */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Button styling */
+.button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #2563eb;
+}
+
+/* Response section styling */
+.response {
+  margin-top: 24px;
+  color: #cbd5e1;
+  width: 700px;
+}
+
+/* Main container for layout of sections */
+.main-container {
+  display: flex;
+  flex-direction: row;
+}

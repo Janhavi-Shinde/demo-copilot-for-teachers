@@ -1,47 +1,80 @@
-import OpenAI from 'openai'
-import { NextResponse } from 'next/server'
+import OpenAI from "openai";
+import { NextResponse } from "next/server";
 
-import { streamText } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 type Prompt = {
-  prompt: string
-}
+  prompt: string;
+};
 
-export const runtime = 'edge'
+var feedbackPrompt = `You are an experienced educator tasked with evaluating a student’s work on World Heritage sites. You will receive a Marking Criteria and Learning Outcomes document along with the student’s assignment. Your role is to provide balanced, constructive feedback that accurately reflects the student’s performance level, ranging from grade A (excellent) to grade E (poor). Your feedback should be detailed, objective, and directly aligned with the provided criteria and learning outcomes.
+
+Instructions:
+
+Utilizing the Marking Criteria and Learning Outcomes:
+Review the Marking Criteria: Carefully assess the student’s work against the specific criteria provided. This may include aspects like understanding of content, use of examples, organization, critical thinking, and use of terminology. Pay close attention to how well the student meets each criterion.
+Align Feedback with Learning Outcomes: Ensure your feedback reflects the extent to which the student has achieved the learning outcomes. This includes understanding key concepts, demonstrating critical analysis, and applying relevant terminology and examples.
+Assigning Grades: Use the criteria to objectively determine the grade level that best matches the student’s performance. High-quality work that meets most or all criteria should be graded higher, while work that falls short in several areas should be graded lower.
+Assessment Criteria for Each Grade:
+Grade A: The work meets or exceeds all marking criteria with a high level of competence. The student demonstrates exceptional understanding, well-organized content, insightful analysis, and the effective use of examples and terminology. Feedback should recognize these strengths and suggest minor areas for further refinement.
+Grade B: The work meets most criteria with a strong level of competence. The student shows a thorough understanding, with good organization and relevant examples, though there may be minor gaps in depth or clarity. Feedback should acknowledge the strong points and offer specific suggestions for enhancement.
+Grade C: The work meets the basic criteria with an adequate level of competence. The student demonstrates a sound understanding but may lack depth, detailed examples, or specific terminology. Feedback should focus on encouraging development in these areas to better meet the assignment expectations.
+Grade D: The work meets only some of the criteria with a limited level of competence. The student demonstrates a basic understanding but with significant gaps in content, organization, or examples. Feedback should be constructive, pointing out key areas for improvement and providing clear guidance on how to enhance the work.
+Grade E: The work meets few or none of the criteria with minimal competence. The student shows an elementary understanding, with major gaps in content and structure. Feedback should be direct, highlighting the areas of struggle and offering clear, actionable advice for building a foundational understanding.
+Feedback Structure:
+Introduction: Start by briefly summarizing how well the student’s work aligns with the Marking Criteria and Learning Outcomes. This overview should set the context for the detailed feedback that follows.
+Strengths: Identify specific strengths in the student’s work, linking them directly to the relevant criteria and outcomes. This may include the use of relevant examples, well-organized content, or effective application of concepts.
+Areas for Improvement: Clearly identify any areas where the work falls short of the criteria. Provide constructive, detailed suggestions on how the student can improve, such as expanding on certain points, using more precise terminology, or better organizing their ideas.
+Grade Justification: Conclude with a summary that reflects the grade level assigned, using phrases like “characteristics of work typically produced by a student performing at grade [A/B/C/D/E] standard.” Ensure this reflects an objective evaluation based on the criteria and outcomes.
+Balanced Evaluation:
+Carefully balance your assessment, ensuring that you neither overestimate nor underestimate the student’s performance.
+Ensure that your feedback is fair, unbiased, and accurately reflects the student’s work in relation to the Marking Criteria and Learning Outcomes.
+Recognize high-quality work that meets the criteria for higher grades, and avoid defaulting to lower grades without clear justification.
+`;
+
+export const runtime = "edge";
 
 export async function POST(req: Request): Promise<Response> {
   try {
-    const {prompt: studentWriting, learningOutcomes, markingCriteria, promptType } = await req.json()
-    const generatePrompt = promptType === 'feedback' ? 'Please provide detailed feedback only on the following student writing based on the expected learning outcomes and marking criteria.' : 'grade the student writing. Based on the expected learning outcomes and marking criteria, please provide a mark out of 100 for the following student writing.'
+    const {
+      prompt: studentWriting,
+      learningOutcomes,
+      markingCriteria,
+      promptType,
+    } = await req.json();
+    const generatePrompt =
+      promptType === "feedback"
+        ? feedbackPrompt
+        : "grade the student writing. Based on the expected learning outcomes and marking criteria, please provide a mark out of 100 for the following student writing.";
     console.log(studentWriting, learningOutcomes, markingCriteria, promptType);
 
     const result = await streamText({
-      model: openai('gpt-3.5-turbo'),
+      model: openai("gpt-3.5-turbo"),
       system:
-        'You are an experienced high school teacher.',
+        "Based on the instructions above, provide feedback on the student work. Your feedback should be concise, approximately 4-5 sentences long, and clearly aligned with the grade level that the student’s work reflects. Ensure your feedback is objective, fair, and reflects an accurate assessment of the student’s performance, making full use of the Marking Criteria and Learning Outcomes provided.",
       messages: [
         {
-          role: 'user',
-          content: `You are a high school teacher which is responsible for teaching Geography.
+          role: "user",
+          content: `
           You need to: ${generatePrompt}.
           Here is the student writing: ${studentWriting}.
           Here is the expected learning outcomes: ${learningOutcomes}.
           Here is the marking criteria: ${markingCriteria}
-          `
-        }
+          `,
+        },
       ],
-      temperature: 0.8
-    })
+      temperature: 0.8,
+    });
 
     return result.toAIStreamResponse();
   } catch (error) {
     // Check if the error is an APIError
     if (error instanceof OpenAI.APIError) {
-      const { name, status, headers, message } = error
-      return NextResponse.json({ name, status, headers, message }, { status })
+      const { name, status, headers, message } = error;
+      return NextResponse.json({ name, status, headers, message }, { status });
     } else {
-      throw error
+      throw error;
     }
   }
 }
