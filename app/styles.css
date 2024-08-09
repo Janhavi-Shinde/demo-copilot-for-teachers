@@ -144,6 +144,7 @@ h3 {
   width: 40vw;
   padding-left: 3vw;
   font-size: 4vh;
+  cursor: pointer;
 }
 
 .selected-subject {
