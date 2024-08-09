@@ -5,6 +5,8 @@ import { useState } from "react";
 import NewAssignmentView from "./NewAssignmentView";
 import NewPromptScreen from "./NewPromptScreen";
 import "../styles.css";
+import AssignmentView from "../AssignmentView";
+import PromptScreen from "../PromptScreen";
 
 export default function MainScreen() {
   const subjects = ["Geography", "English", "History"];

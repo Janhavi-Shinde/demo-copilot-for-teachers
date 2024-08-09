@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { set } from "zod";
 import Assignment from "../Assignment";
 import React from "react";
+import EditableDiv from "./EditableDiv";
 
 function NewPromptScreen() {
   const [learningOutcomes, setLearningOutcomes] = useState("");
@@ -51,7 +52,11 @@ function NewPromptScreen() {
           <div className="response">{responseFromServer}</div>
         )}
       </div>
-      <textarea className="question-field"></textarea>
+      <div className="question-wrapper">
+        {/* For some reason <textarea> wouldn't let me go smaller than a certain height */}
+        <EditableDiv placeholder="Follow up questions..." />
+        <button className="question-button">Send</button>
+      </div>
     </div>
   ) : (
     <form className="prompt-form">
@@ -70,10 +75,9 @@ function NewPromptScreen() {
           <p>UPLOAD ASSIGNMENT PDF</p>
         </div>
         <div className="button-container">
-          <button
+          <div
             className="generation-button"
             id="giveFeedback"
-            type="button"
             onClick={handleButton("feedback")}
           >
             <p className="button-title">Student Feedback</p>
@@ -82,16 +86,14 @@ function NewPromptScreen() {
               Submission
             </p>
             <ul className="button-list">
-              <li>- Custom Tailored Feedback</li>
-              <li>- Improve Grade</li>
+              <li>Custom Tailored Feedback</li>
+              <li>Improve Grade</li>
             </ul>
-          </button>
-          <button
+          </div>
+          <div
             className="generation-button"
             id="generateGrade"
-            type="button"
             onClick={handleButton("grade")}
-            style={{ cursor: "pointer" }}
           >
             <p className="button-title">Estimate My Grade</p>
             <p>
@@ -100,11 +102,11 @@ function NewPromptScreen() {
             </p>
             <ul className="button-list">
               <li>
-                - Uses the Marking Criteria and Learning Guide to estimate your
+                Uses the Marking Criteria and Learning Guide to estimate your
                 current grade
               </li>
             </ul>
-          </button>
+          </div>
         </div>
       </div>
     </form>
