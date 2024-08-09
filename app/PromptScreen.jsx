@@ -57,30 +57,6 @@ function PromptScreen() {
                 className="textarea"
               />
             </div>
-            {/* <div className="textarea-wrapper">
-              <label htmlFor="learningOutcomes" className="label">
-                Expected Learning Outcomes
-              </label>
-              <textarea
-                id="learningOutcomes"
-                value={learningOutcomes}
-                onChange={handleChange(setLearningOutcomes)}
-                disabled={isLoading}
-                className="textarea"
-              />
-            </div>
-            <div className="textarea-wrapper">
-              <label htmlFor="markingCriteria" className="label">
-                Marking Criteria
-              </label>
-              <textarea
-                id="markingCriteria"
-                value={markingCriteria}
-                onChange={handleChange(setMarkingCriteria)}
-                disabled={isLoading}
-                className="textarea"
-              />
-            </div> */}
           </div>
 
           <div className="button-container">
@@ -110,3 +86,30 @@ function PromptScreen() {
 }
 
 export default PromptScreen;
+
+{
+  /* <div className="textarea-wrapper">
+              <label htmlFor="learningOutcomes" className="label">
+                Expected Learning Outcomes
+              </label>
+              <textarea
+                id="learningOutcomes"
+                value={learningOutcomes}
+                onChange={handleChange(setLearningOutcomes)}
+                disabled={isLoading}
+                className="textarea"
+              />
+            </div>
+            <div className="textarea-wrapper">
+              <label htmlFor="markingCriteria" className="label">
+                Marking Criteria
+              </label>
+              <textarea
+                id="markingCriteria"
+                value={markingCriteria}
+                onChange={handleChange(setMarkingCriteria)}
+                disabled={isLoading}
+                className="textarea"
+              />
+            </div> */
+}
