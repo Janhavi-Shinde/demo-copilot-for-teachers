@@ -43,28 +43,32 @@ export async function POST(req: Request): Promise<Response> {
       markingCriteria,
       promptType,
     } = await req.json();
-    const generatePrompt =
-      promptType === "feedback"
-        ? feedbackPrompt
-        : "grade the student writing. Based on the expected learning outcomes and marking criteria, please provide a mark out of 100 for the following student writing.";
-    console.log(studentWriting, learningOutcomes, markingCriteria, promptType);
+    let generatePrompt: string;
+    if (promptType === "feedback") {
+      generatePrompt = "Generate a 110 world paragraph feedback not a list.";
+    } else {
+      generatePrompt = "Grade the student writing, typically in terms of grade standard, e.g., grade A, B, C, D, E. Not give any feedback";
+    }
+
+    const feedbackStruct = "According to Level of understanding demonstrated by the student, e.g., extensive, thorough, sound, basic, elementary. Level of competence in identifying and gathering information, e.g., very high, high, adequate, limited, very limited. Description of the report format used, e.g., well-organized, appropriately structured, brief, etc. Content Details: Were examples provided? Were they effective or lacking? Understanding of specific concepts, e.g., differences between cultural and physical listings, economic impacts, etc. Use of appropriate terminology and whether it was lacking? Suggestions for strengthening the work, e.g., better structuring, more detailed explanations, use of specific terminology. Also based on the learning outcomes and marking criteria provided."
 
     const result = await streamText({
-      model: openai("gpt-3.5-turbo"),
+      model: openai("gpt-4o-mini"),
       system:
-        "Based on the instructions above, provide feedback on the student work. Your feedback should be concise, approximately 4-5 sentences long, and clearly aligned with the grade level that the student’s work reflects. Ensure your feedback is objective, fair, and reflects an accurate assessment of the student’s performance, making full use of the Marking Criteria and Learning Outcomes provided.",
+        "You are a high school teacher which is responsible for teaching Geography.",
       messages: [
         {
           role: "user",
           content: `
-          You need to: ${generatePrompt}.
           Here is the student writing: ${studentWriting}.
           Here is the expected learning outcomes: ${learningOutcomes}.
-          Here is the marking criteria: ${markingCriteria}
+          Here is the marking criteria: ${markingCriteria}.
+          Here is points you need to consider: ${feedbackStruct}.
+          You need to: ${generatePrompt}.
           `,
         },
       ],
-      temperature: 0.8,
+      temperature: 0.5,
     });
 
     return result.toAIStreamResponse();
