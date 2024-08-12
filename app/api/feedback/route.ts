@@ -50,6 +50,8 @@ export async function POST(req: Request): Promise<Response> {
       generatePrompt = "Grade the student writing, typically in terms of grade standard, e.g., grade A, B, C, D, E. Not give any feedback";
     }
 
+    console.log("PromptType:", promptType, generatePrompt);
+
     const feedbackStruct = "According to Level of understanding demonstrated by the student, e.g., extensive, thorough, sound, basic, elementary. Level of competence in identifying and gathering information, e.g., very high, high, adequate, limited, very limited. Description of the report format used, e.g., well-organized, appropriately structured, brief, etc. Content Details: Were examples provided? Were they effective or lacking? Understanding of specific concepts, e.g., differences between cultural and physical listings, economic impacts, etc. Use of appropriate terminology and whether it was lacking? Suggestions for strengthening the work, e.g., better structuring, more detailed explanations, use of specific terminology. Also based on the learning outcomes and marking criteria provided."
 
     const result = await streamText({

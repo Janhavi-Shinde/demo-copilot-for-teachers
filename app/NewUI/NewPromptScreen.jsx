@@ -33,17 +33,18 @@ function NewPromptScreen() {
     },
   });
 
-  const handleButton = (newPromptType) => async (e) => {
+  const handleButton = (setPrompt, promptType) => async (e) => {
     e.preventDefault();
-    setPrompt(newPromptType);
+    setPrompt(promptType);
     setIsGenerationModuleVisible(true);
-    handleSubmit();
   };
 
   useEffect(() => {
-    setLearningOutcomes(Assignment.learningOutcomes);
-    setMarkingCriteria(Assignment.markingCriteria);
-  }, []);
+    if (isGenerationModuleVisible) {
+      handleSubmit();
+      console.log("promptType: ", promptType);
+    }
+  }, [isGenerationModuleVisible, promptType]);
 
   return isGenerationModuleVisible ? (
     <div className="generation-module">
@@ -78,7 +79,7 @@ function NewPromptScreen() {
           <div
             className="generation-button"
             id="giveFeedback"
-            onClick={handleButton("feedback")}
+            onClick={handleButton(setPrompt, "feedback")}
           >
             <p className="button-title">Student Feedback</p>
             <p>
@@ -93,7 +94,7 @@ function NewPromptScreen() {
           <div
             className="generation-button"
             id="generateGrade"
-            onClick={handleButton("grade")}
+            onClick={handleButton(setPrompt, "grade")}
           >
             <p className="button-title">Estimate My Grade</p>
             <p>
