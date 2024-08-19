@@ -13,7 +13,8 @@ var feedbackPrompt = `You are an experienced educator tasked with evaluating a s
 Instructions:
 
 Utilizing the Marking Criteria and Learning Outcomes:
-Review the Marking Criteria: Carefully assess the student’s work against the specific criteria provided. This may include aspects like understanding of content, use of examples, organization, critical thinking, and use of terminology. Pay close attention to how well the student meets each criterion.
+Review the Marking Criteria: 
+Carefully assess the student’s work against the specific criteria provided. This may include aspects like understanding of content, use of examples, organization, critical thinking, and use of terminology. Pay close attention to how well the student meets each criterion.
 Align Feedback with Learning Outcomes: Ensure your feedback reflects the extent to which the student has achieved the learning outcomes. This includes understanding key concepts, demonstrating critical analysis, and applying relevant terminology and examples.
 Assigning Grades: Use the criteria to objectively determine the grade level that best matches the student’s performance. High-quality work that meets most or all criteria should be graded higher, while work that falls short in several areas should be graded lower.
 Assessment Criteria for Each Grade:
@@ -45,19 +46,24 @@ export async function POST(req: Request): Promise<Response> {
     } = await req.json();
     let generatePrompt: string;
     if (promptType === "feedback") {
-      generatePrompt = "Generate a 110 world paragraph feedback not a list.";
+      generatePrompt = "Generate feedback with hightlighted headings for each paraghaph.";
     } else {
       generatePrompt = "Grade the student writing, typically in terms of grade standard, e.g., grade A, B, C, D, E. Not give any feedback";
     }
 
     console.log("PromptType:", promptType, generatePrompt);
 
-    const feedbackStruct = "According to Level of understanding demonstrated by the student, e.g., extensive, thorough, sound, basic, elementary. Level of competence in identifying and gathering information, e.g., very high, high, adequate, limited, very limited. Description of the report format used, e.g., well-organized, appropriately structured, brief, etc. Content Details: Were examples provided? Were they effective or lacking? Understanding of specific concepts, e.g., differences between cultural and physical listings, economic impacts, etc. Use of appropriate terminology and whether it was lacking? Suggestions for strengthening the work, e.g., better structuring, more detailed explanations, use of specific terminology. Also based on the learning outcomes and marking criteria provided."
-
+    const feedbackStruct = `You are an educational assistant providing feedback on student work based on specific marking guidelines. Your feedback should be structured with clearly highlighted headings and follow the criteria provided. Carefully balance your assessment, ensuring that you neither overestimate nor underestimate the student’s performance.
+    Ensure that your feedback is fair, unbiased, and accurately reflects the student’s work in relation to the Marking Criteria and Learning Outcomes.
+    Recognize high-quality work that meets the criteria for higher grades, and avoid defaulting to lower grades without clear justification. Use the following format and mardown syntax to highlight headings and break down the feedback into paragraphs:
+    Generate the marking criteria and tell student what they did good or bad and how well they have met each criteria.
+    List the learning outcomes and tell student how well they have met each outcomes.
+    Your response format: aggressive use of markdown bold containers (**) within text body for word emphasis encouraged.`;
+    
     const result = await streamText({
       model: openai("gpt-4o-mini"),
       system:
-        "You are a high school teacher which is responsible for teaching Geography.",
+        "You are a highschool teacher. You give feedback and grade for highschool level work",
       messages: [
         {
           role: "user",
@@ -65,8 +71,9 @@ export async function POST(req: Request): Promise<Response> {
           Here is the student writing: ${studentWriting}.
           Here is the expected learning outcomes: ${learningOutcomes}.
           Here is the marking criteria: ${markingCriteria}.
-          Here is points you need to consider: ${feedbackStruct}.
           You need to: ${generatePrompt}.
+          When you are asked to provide grade, you should give strict grade and not provide feedback.
+          If you are asked to provide feedback, you should provide feedback with this structure: ${feedbackStruct}. And provide grade.
           `,
         },
       ],

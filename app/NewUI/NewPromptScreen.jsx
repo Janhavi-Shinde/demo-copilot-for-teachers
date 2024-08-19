@@ -7,6 +7,7 @@ import { set } from "zod";
 import Assignment from "../Assignment";
 import React from "react";
 import EditableDiv from "./EditableDiv";
+import { marked } from "marked";
 
 function NewPromptScreen() {
   const [learningOutcomes, setLearningOutcomes] = useState("");
@@ -46,11 +47,15 @@ function NewPromptScreen() {
     }
   }, [isGenerationModuleVisible, promptType]);
 
+  const createMarkup = (markdown) => {
+    return { __html: marked(markdown) };
+  };
+
   return isGenerationModuleVisible ? (
     <div className="generation-module">
       <div className="generation-response">
         {responseFromServer && (
-          <div className="response">{responseFromServer}</div>
+          <div className="response" dangerouslySetInnerHTML={createMarkup(responseFromServer)}></div>
         )}
       </div>
       <div className="question-wrapper">
