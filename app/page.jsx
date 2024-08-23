@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import PromptScreen from "./PromptScreen";
 import AssignmentView from "./AssignmentView";
 import MainScreen from "./NewUI/MainScreen";
-
+import ChatNew from "./ChatNew";
 export default function Chat() {
   const assignmentArray = ["English", "Geography", "History"];
   const [showCustomView, setShowCustomView] = useState(false);

@@ -3,13 +3,16 @@
 import { useCompletion } from "ai/react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useChat } from "ai/react";
 import { set } from "zod";
 import Assignment from "../Assignment";
 import React from "react";
 import EditableDiv from "./EditableDiv";
 import { marked } from "marked";
+import ChatNew from "../ChatNew";
 
 function NewPromptScreen() {
+  const [studentWriting, setStudentWriting] = useState("");
   const [learningOutcomes, setLearningOutcomes] = useState("");
   const [markingCriteria, setMarkingCriteria] = useState("");
   const [promptType, setPrompt] = useState("");
@@ -55,14 +58,18 @@ function NewPromptScreen() {
     <div className="generation-module">
       <div className="generation-response">
         {responseFromServer && (
-          <div className="response" dangerouslySetInnerHTML={createMarkup(responseFromServer)}></div>
+          <div
+            className="response"
+            dangerouslySetInnerHTML={createMarkup(responseFromServer)}
+          ></div>
         )}
       </div>
-      <div className="question-wrapper">
-        {/* For some reason <textarea> wouldn't let me go smaller than a certain height */}
-        <EditableDiv placeholder="Follow up questions..." />
-        <button className="question-button">Send</button>
-      </div>
+      <ChatNew
+        studentWriting={studentWriting}
+        learningOutcomes={learningOutcomes}
+        markingCriteria={markingCriteria}
+        feedbackPrompt={responseFromServer}
+      ></ChatNew>
     </div>
   ) : (
     <form className="prompt-form">
@@ -72,7 +79,10 @@ function NewPromptScreen() {
             id="studentWriting"
             placeholder="Submit your assignment here or upload your file below..."
             value={input}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              handleInputChange(e);
+              setStudentWriting(e.target.value);
+            }}
             disabled={isLoading}
             className="textarea"
           ></textarea>
